@@ -1,3 +1,15 @@
+let resultDiv = document.createElement("div");
+let currentRound = document.createElement("div");
+let scoreResult = document.createElement("div")
+resultDiv.className = "result-div";
+
+currentRound.textContent = "Click a button to play";
+
+resultDiv.appendChild(currentRound);
+resultDiv.appendChild(scoreResult);
+
+document.body.append(resultDiv);
+
 let humanScore = 0;
 let computerScore = 0;
 
@@ -23,29 +35,53 @@ function playRound(humanChoice, computerChoice) {
   computerMove = options[computerChoice];
 
   if (humanChoice === computerChoice) {
-    console.log(`Tie. ${humanMove} vs ${computerMove}`);
+    currentRound.textContent = `Tie. ${humanMove} vs ${computerMove}`;
   } else if (
     humanChoice == 0 && computerChoice == 2 ||
     humanChoice == 1 && computerChoice == 0 ||
     humanChoice == 2 && computerChoice == 1
   ) {
-    console.log(`You win!. ${humanMove} vs ${computerMove}`);
+    currentRound.textContent = `You win. ${humanMove} vs ${computerMove}`;
     humanScore++;
   } else {
-    console.log(`You lose!. ${humanMove} vs ${computerMove}`);
+    currentRound.textContent = `You lose. ${humanMove} vs ${computerMove}`;
     computerScore++;
   }
-  console.log(`Scoreboard: [Player: ${humanScore}] [Computer: ${computerScore}]`);
+    scoreResult.textContent = `Scoreboard: [Player: ${humanScore}] [Computer: ${computerScore}]`;
 }
 
+let humanSelection;
 
-function playGame() {
-  for (let i = 0; i < 5; i++) {
-  const humanSelection = getHumanChoice();
+function playGame(e) {
+
+  if (humanScore == 5) {
+    currentRound.textContent = "Human Wins!";
+    return;
+  } else if (computerScore == 5) {
+    currentRound.textContent = "Computer Wins!";
+    return;
+  }
+
+  let choice = e.currentTarget.dataset.choice;
+  if (choice === "rock") {
+    humanSelection = 0;
+  } else if (choice === "paper") {
+    humanSelection = 1;
+  } else if (choice === "scissors") {
+    humanSelection = 2;
+  } else {
+    console.log("Error getting button info");
+    return;
+  }
+
   const computerSelection = getComputerChoice();
 
   playRound(humanSelection, computerSelection);
-  }
 }
 
-playGame();
+const btns = document.querySelectorAll(".btn");
+
+for (const button of btns) {
+  button.addEventListener("click", playGame)
+}
+
