@@ -12,6 +12,7 @@ document.body.append(resultDiv);
 
 let humanScore = 0;
 let computerScore = 0;
+let gameOver = false;
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -27,6 +28,16 @@ function getHumanChoice() {
   return choice.toLowerCase();
 }
 
+function checkWinner() {
+  if (humanScore === 5 || computerScore === 5) {
+    currentRound.textContent = humanScore === 5 ? "Human Wins!" : "Computer Wins!";
+    gameOver = true;
+
+    for (const button of btns) {
+      button.disabled = true;
+    }
+  }
+}
 
 function playRound(humanChoice, computerChoice) {
   const options = ['rock', 'paper', 'scissors'];
@@ -47,18 +58,14 @@ function playRound(humanChoice, computerChoice) {
     currentRound.textContent = `You lose. ${humanMove} vs ${computerMove}`;
     computerScore++;
   }
-    scoreResult.textContent = `Scoreboard: [Player: ${humanScore}] [Computer: ${computerScore}]`;
+  scoreResult.textContent = `Scoreboard: [Player: ${humanScore}] [Computer: ${computerScore}]`;
+  checkWinner();
 }
 
 let humanSelection;
 
 function playGame(e) {
-
-  if (humanScore == 5) {
-    currentRound.textContent = "Human Wins!";
-    return;
-  } else if (computerScore == 5) {
-    currentRound.textContent = "Computer Wins!";
+  if (gameOver) {
     return;
   }
 
